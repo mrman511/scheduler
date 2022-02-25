@@ -4,75 +4,42 @@ import DayList from "./DayList";
 import Appointment from "./appointment";
 import "components/Application.scss";
 import axios from "axios"
-
-
-
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-  },
-  {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer:{
-        id: 3,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-  {
-    id: 3,
-    time: "2pm",
-  },
-  {
-    id: 4,
-    time: "3pm",
-    interview: {
-      student: "Archie Andrews",
-      interviewer:{
-        id: 4,
-        name: "Cohana Roy",
-        avatar: "https://i.imgur.com/FK8V841.jpg",
-      }
-    }
-  },
-  {
-    id: 5,
-    time: "4pm",
-  }
-];
-
+import { getAppointmentsForDay } from "helpers/selectors";
 
 
 export default function Application(props) {
-  const [day, setDay] = useState('Monday')
-  const [days, setDays] = useState([]);
-  //const dayUrl = '/api/days'
-
-  function SetDay(newDay) {
-    setDay(newDay);
-  }
-
-  const parsedAppointments = appointments.map(element => (
-    <Appointment 
-      key={element.id}
-      time={element.time}
-      interview={element.interview} 
-    /> 
-    )
-  );
-  parsedAppointments.push(<Appointment key='last' time="5pm" />)
-
+  const [state, setState] =useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: []
+  });
+  
+  const setDay = day => setState({...state, day}) 
   useEffect(()=> {
-    axios.get('/api/days').then(response => {
-      setDays(response.data)
-      console.log("response: ",response.data)
+    Promise.all([
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers')
+    ]).then((results) => {
+      setState((prev) => ({
+        ...prev,
+        days: results[0].data, 
+        appointments: results[1].data,
+        interviewers: results[2].data
+      }))
     })
   }, [])
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day).map(element => {
+    return (<Appointment 
+      key={element.id}
+      {...element}
+    /> )
+   }
+  );
+  dailyAppointments.push(<Appointment key="last" time="5pm" />)
+
 
   return (
     <main className="layout">
@@ -84,7 +51,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList value={ day } days={ days } onChange={ (event) => SetDay(event) }/>
+          <DayList value={ state.day } days={ state.days } onChange={ (event) => setState.day(event) }/>
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"            
@@ -93,7 +60,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        { parsedAppointments }
+        { dailyAppointments }
       </section>
     </main>
   );
