@@ -4,7 +4,7 @@ import DayList from "./DayList";
 import Appointment from "./appointment";
 import "components/Application.scss";
 import axios from "axios"
-import { getAppointmentsForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview} from "helpers/selectors";
 
 
 export default function Application(props) {
@@ -12,10 +12,15 @@ export default function Application(props) {
     day: "Monday",
     days: [],
     appointments: {},
-    interviewers: []
+    interviewers: {}
   });
   
-  const setDay = day => setState({...state, day}) 
+
+  const setDay = day => {
+    setState({...state, day})
+    console.log(state.day);
+  }
+
   useEffect(()=> {
     Promise.all([
       axios.get('/api/days'),
@@ -31,10 +36,12 @@ export default function Application(props) {
     })
   }, [])
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day).map(element => {
+  const dailyAppointments = getAppointmentsForDay(state, state.day).map(appointment => {
+    const interview = getInterview(state, appointment.interview);
     return (<Appointment 
-      key={element.id}
-      {...element}
+      key={appointment.id}
+      {...appointment}
+      iterview={interview}
     /> )
    }
   );
@@ -51,7 +58,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList value={ state.day } days={ state.days } onChange={ (event) => setState.day(event) }/>
+          <DayList value={ state.day } days={ state.days } onChange={ setDay }/>
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"            
