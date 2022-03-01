@@ -3,9 +3,9 @@ export function getAppointmentsForDay(state, day) {
   const appointments = state.appointments
   
   //filter list out the day whose name is equal to argument "day"
-  const foundDay = state.days.filter(element => element.name === day);
-  if (foundDay[0]) { 
-    const appointmentIdArray = foundDay[0].appointments;
+  const foundDay = state.days.find(element => element.name === day);
+  if (foundDay) { 
+    const appointmentIdArray = foundDay.appointments;
     const arrayOfAppointments = [];
 
     for (let appointment in appointments) {
@@ -31,35 +31,12 @@ export function getInterview(state, interview) {
   }
 }
 
+
 export function getInterviewersForDay(state, day) {
   if (!state.days || state.days.length === 0) { return []; }
+  const foundDay = state.days.find(element => element.name === day)
   //get interviews appointments for day
-  const interviewers = Object.values(state.interviewers);
-  const appointments = getAppointmentsForDay(state, day);
-  const interviewersIdArray = [];
-  const filteredInterviewers = [];
-  
-  // get the interviews for those appointments
-  appointments.forEach(appointment => {
-    if (appointment.interview){
-      interviewersIdArray.push(appointment.interview.interviewer)
-    } else {
-      interviewersIdArray.push(null);
-    }
-  });
-  
-  //get the interviewers who(s) id is includes the interviewersIdArray;
-  interviewersIdArray.forEach((id) => {
-    if (id) {
-      for (let interviewer of interviewers) {
-        if (interviewersIdArray.includes(interviewer.id)) {
-          filteredInterviewers.push(interviewer);
-      }
-    } 
-    
-   } else { filteredInterviewers.push(null) }
-  })
-  
-  return filteredInterviewers;
+  const interviewers = foundDay.interviewers.map(interviewerId => (state.interviewers[interviewerId]))
+  return interviewers;
 }
 
