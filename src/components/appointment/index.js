@@ -1,19 +1,21 @@
 import React from "react";
 import useVisualMode from "components/hooks/useVisualMode";
+
 import Header from "./Header";
 import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
 import Confirm from "./Confirm";
+import Error from "./Error";
+
 import axios from "axios";
 
 import "components/appointment/style.scss"
-import { useEffect } from "react";
 
 
 export default function Appointment(props){
-  const { id, time, interview, bookInterview, interviewers, deleteAppointment } = props;
+  const { id, time, interview, bookInterview, interviewers, cancelInterview } = props;
   let interviewer = "";
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
@@ -21,9 +23,12 @@ export default function Appointment(props){
   const SAVING = "SAVING";
   const DELETING = "DELETING"
   const CONFIRM = "CONFIRM"
-  const { mode, transition, back} = useVisualMode(interview ? SHOW : EMPTY);
+  const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
+  const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
+
   const deleteMessage = 'Would you like to delete this appointment?';
-  const editMessage = 'Confirm your appointment changes!'
 
   function save(name, interviewer) {
     transition(SAVING);
@@ -32,38 +37,50 @@ export default function Appointment(props){
       interviewer
     };
     
-    axios.put(`/api/appointments/${id}`, {interview: newInterview})
+    bookInterview(id, newInterview)
     .then(() => transition(SHOW))
-    .catch((err) => console.log("ERROR: ", err));
+    .catch(() => {
+      transition(ERROR_SAVE);
+    } );
 
-    bookInterview(id, newInterview);
+    
   }
   function onDelete(id){
     transition(CONFIRM);
   }
 
-  function onConfirm(id){
+  function onConfirm(){
     transition(DELETING);
-    axios.delete(`/api/appointments/${id}`)
+    cancelInterview(id)
     .then(() => transition(EMPTY))
-    .catch(err => console.log('ERROR: ', err));
+    .catch((err) => {
+      transition(ERROR_DELETE);
+    });
+  }
+
+  function onEdit(){
+    transition(EDIT)
   }
 
   return (
     <article className="appointment">
       <Header time={ time } />
-        {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
+        {mode === EMPTY && <Empty onAdd={ () => transition(CREATE) } />}
         {mode === SHOW && (
           <Show
-            student={interview.student}
-            interviewer={interview.interviewer}
-            onDelete={() => onDelete(id)}
+            student={ interview.student }
+            interviewer={ interview.interviewer }
+            onDelete={ () => onDelete(id) }
+            onEdit={ () => onEdit() }
           />
         )}
-        {mode === CREATE && <Form interviewers={ interviewers } onSave = { save } onCancel={() => back()}/>}
-        {mode === SAVING && <Status message="SAVING"/>}
-        {mode === DELETING && <Status message="DELETING" />}
-        {mode === CONFIRM && <Confirm message={deleteMessage} onConfirm={() => onConfirm(id)} onCancel={() => back()}/> }
+        { mode === CREATE && <Form interviewers={ interviewers } onSave = { save } onCancel={ () => back() }/> }
+        { mode === SAVING && <Status message="SAVING"/> }
+        { mode === DELETING && <Status message="DELETING" /> }
+        { mode === CONFIRM && <Confirm message={ deleteMessage } onConfirm={ () => onConfirm() } onCancel={ () => back() }/> }
+        { mode === EDIT && <Form interviewers= { interviewers } student={ interview.student } interviewer={ interview.interviewer } onSave = { save } onCancel={ () => back() }/> }
+        { mode === ERROR_SAVE && <Error message={ 'Failed to save appointment' }  onClose={ () => transition(CREATE) } /> }
+        { mode === ERROR_DELETE && <Error message={ 'Failed to delete appointment' }  onClose={ () => transition(SHOW) } /> }
     </article>
   );
 }
