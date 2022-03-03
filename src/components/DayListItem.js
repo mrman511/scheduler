@@ -9,7 +9,7 @@ export default function DayListItem(props) {
     'day-list__item--full': (spots === 0)
   });
   return (
-    <li className={dayClass} onClick={() => onChange(name)}>
+    <li className={dayClass} onClick={() => onChange(name)} data-testid="day">
       <h2 className="text--regular">{name}</h2> 
       {(spots > 1) && <h3 className="text--light">{spots} spots remaining</h3>}
       {(spots === 1) && <h3 className="text--light">{spots} spot remaining</h3>}
