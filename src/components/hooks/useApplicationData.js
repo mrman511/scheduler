@@ -11,7 +11,7 @@ export default function useApplicationData() {
   });
 
   const setDay = day => {
-    setState({...state, day})
+    setState({ ...state, day} );
     
   }
 
@@ -25,8 +25,8 @@ export default function useApplicationData() {
       days: results[0].data, 
       appointments: results[1].data,
       interviewers: results[2].data
-    }))
-  })
+    }));
+  });
 
   function cancelInterview(id) {
 
@@ -46,7 +46,7 @@ export default function useApplicationData() {
         ...state,
         appointments
       });
-    })
+    });
   }
 
   const bookInterview = (id, interview) => {
@@ -67,7 +67,7 @@ export default function useApplicationData() {
         ...state,
         appointments
       });
-    })
+    });
   }
   
   return { state, setDay, bookInterview, cancelInterview };

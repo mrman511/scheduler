@@ -42,12 +42,12 @@ export default function Form(props) {
             className="appointment__create-input text--semi-bold"
             name="name"
             type="text"
-            value={student}
+            value={ student }
             placeholder="Enter Student Name"
-            onChange= {(event) => setStudent(event.target.value)}
+            onChange= { (event) => setStudent(event.target.value) }
             data-testid = { "student-name-input" }
           />
-          <section className="appointment__validation">{error}</section>
+          <section className="appointment__validation">{ error }</section>
         </form>
         <InterviewerList
         interviewers = { interviewers }
@@ -58,7 +58,7 @@ export default function Form(props) {
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button danger onClick={cancel}>Cancel</Button>
+          <Button danger onClick={ cancel }>Cancel</Button>
           <Button confirm onClick={ () => validate() }>Save</Button>
         </section>
       </section>
