@@ -13,7 +13,7 @@ function InterviewerList(props) {
       key={ element.id }                                                    
       name={ element.name }
       avatar={ element.avatar }
-      selected= { (element.id === props.value) }
+      selected= { (element.id === interviewer.id) }
       setInterviewer = { () => props.onChange(element.id) }
     />))
 

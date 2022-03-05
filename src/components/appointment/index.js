@@ -9,14 +9,12 @@ import Status from "./Status";
 import Confirm from "./Confirm";
 import Error from "./Error";
 
-import axios from "axios";
-
 import "components/appointment/style.scss"
 
 
 export default function Appointment(props){
   const { id, time, interview, bookInterview, interviewers, cancelInterview } = props;
-  let interviewer = "";
+  
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
@@ -37,7 +35,7 @@ export default function Appointment(props){
       interviewer
     };
     
-    bookInterview()
+    bookInterview(id, newInterview)
     .then(() => transition(SHOW))
     .catch(() => {
       transition(ERROR_SAVE);
