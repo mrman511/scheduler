@@ -5,9 +5,9 @@
 Install dependencies with `npm install`.
 
 ### Required Dependencies
--axios
--cypress
--react
+- axios
+- cypress
+- react
 
 
 ## Running Webpack Development Server
@@ -33,3 +33,12 @@ npm run storybook
 [API available here](https://github.com/mrman511/scheduler-api)
 
 ## Scheduler Images
+
+### Index page
+![Index](https://github.com/mrman511/scheduler/blob/master/docs/index.png)
+
+### Create Form
+![create](https://github.com/mrman511/scheduler/blob/master/docs/create_appointment.png)
+
+### Confirmation on delete and edit
+![Confirmation](https://github.com/mrman511/scheduler/blob/master/docs/confirmation.png)
