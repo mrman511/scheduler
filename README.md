@@ -4,6 +4,12 @@
 
 Install dependencies with `npm install`.
 
+### Required Dependencies
+-axios
+-cypress
+-react
+
+
 ## Running Webpack Development Server
 
 ```sh
@@ -21,3 +27,9 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## API
+
+[API available here](https://github.com/mrman511/scheduler-api)
+
+## Scheduler Images
