@@ -1,5 +1,5 @@
 import React from "react";
-import useVisualMode from "components/hooks/useVisualMode";
+import useVisualMode from "hooks/useVisualMode";
 
 import Header from "./Header";
 import Show from "./Show";
@@ -40,9 +40,8 @@ export default function Appointment(props){
     .catch(() => {
       transition(ERROR_SAVE);
     } );
-
-    
   }
+
   function onDelete(){
     transition(CONFIRM);
   }
@@ -72,11 +71,11 @@ export default function Appointment(props){
             onEdit={ () => onEdit() }
           />
         )}
-        { mode === CREATE && <Form interviewers={ interviewers } onSave = { save } onCancel={ () => back() }/> }
+        { mode === CREATE && <Form interviewers={ interviewers } onSave = { save } onCancel={ back }/> }
         { mode === SAVING && <Status message="SAVING"/> }
         { mode === DELETING && <Status message="DELETING" /> }
-        { mode === CONFIRM && <Confirm message={ deleteMessage } onConfirm={ () => onConfirm() } onCancel={ () => back() }/> }
-        { mode === EDIT && <Form interviewers= { interviewers } student={ interview.student } interviewer={ interview.interviewer } onSave = { save } onCancel={ () => back() }/> }
+        { mode === CONFIRM && <Confirm message={ deleteMessage } onConfirm={ () => onConfirm() } onCancel={ back }/> }
+        { mode === EDIT && <Form interviewers= { interviewers } student={ interview.student } interviewer={ interview.interviewer } onSave = { save } onCancel={ back }/> }
         { mode === ERROR_SAVE && <Error message={ 'Failed to save appointment' }  onClose={ () => transition(CREATE) } /> }
         { mode === ERROR_DELETE && <Error message={ 'Failed to delete appointment' }  onClose={ () => transition(SHOW) } /> }
     </article>

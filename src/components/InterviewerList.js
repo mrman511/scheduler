@@ -7,6 +7,8 @@ import { PropTypes } from "prop-types"
 function InterviewerList(props) {
   const interviewers = props.interviewers;
   const interviewer = props.interviewer;
+  // 
+  console.log(props);
   
   const parsedInterviewers = interviewers.map(element => (
     <InterveiwerListItem 
@@ -14,7 +16,7 @@ function InterviewerList(props) {
       name={ element.name }
       avatar={ element.avatar }
       selected= { (element.id === interviewer.id) }
-      setInterviewer = { () => props.onChange(element.id) }
+      setInterviewer = { () => props.onChange(element) }
     />))
 
   return (

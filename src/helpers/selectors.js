@@ -1,5 +1,4 @@
 export function getAppointmentsForDay(state, day) {
-  const filteredAppointments = [];
   const appointments = state.appointments
   
   //filter list out the day whose name is equal to argument "day"
